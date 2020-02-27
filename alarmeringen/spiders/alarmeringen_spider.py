@@ -12,9 +12,13 @@ class AlarmeringenSpider(scrapy.Spider):
             yield scrapy.Request(url=url, callback=self.parse)
 
     def parse(self, response):
+
+        # print("reponse:" , response.selector.xpath('').get())
+
         filename = 'alarmeringen.txt'
         with open(filename, 'ab') as f:
             meldingen = response.xpath('//*[@class="msgtitle"]//a/text()').get().strip()
-            output = meldingen + "\n"
+            datum = response.xpath('//span[@class="date"]/text()').get()
+            output = datum[17:] + meldingen + "\n"
 
-            f.write(output.encode())            
+            f.write(output.encode())
